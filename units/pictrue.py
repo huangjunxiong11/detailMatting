@@ -13,7 +13,7 @@ def matting(input_dir, output_dir):
     :return: 无返回值
     """
     humanseg = hub.Module(name='deeplabv3p_xception65_humanseg')
-    files = [input_dir + i for i in os.listdir(input_dir)]
+    files = [os.path.join(input_dir, i) for i in os.listdir(input_dir)]
     try:
         os.makedirs(output_dir)
     except OSError:
@@ -21,7 +21,7 @@ def matting(input_dir, output_dir):
     humanseg.segmentation(data={'image': files}, output_dir=output_dir)  # 抠图
 
 
-# matting('../data/frame/2020-04-27/shu/', '../data/humanseg/2020-04-27/shu')
+# matting('../data/frame/2020-04-27/shu/5-3/', '../data/humanseg/2020-04-27/shu/5-3/')
 
 
 def rudemask(input_dir, output_dir):
@@ -46,7 +46,7 @@ def rudemask(input_dir, output_dir):
         cv.imwrite(save_path, rgba)
 
 
-# rudemask('../data/humanseg/2020-04-27/shu', '../data/rudemask/2020-04-27/shu')
+# rudemask('../data/humanseg/2020-04-27/shu/5-3', '../data/rudemask/2020-04-27/shu/5-3')
 
 
 def rudemask2trimap(input_dir, output_dir):
@@ -73,4 +73,4 @@ def rudemask2trimap(input_dir, output_dir):
         cv.imwrite(save_path, trimap)
 
 
-# rudemask2trimap('../data/rudemask/2020-04-27/shu', '../data/trimap/2020-04-27/shu')
+# rudemask2trimap('../data/rudemask/2020-04-27/shu/5-3', '../data/trimap/2020-04-27/shu/5-3')

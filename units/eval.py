@@ -10,12 +10,13 @@ from config import device
 from data_gen import data_transforms
 from utils import ensure_folder
 
-IMG_FOLDER = '../data/frame/2020-04-27/shu'
-TRIMAP_FOLDERS = ['../data/trimap/2020-04-27/shu']
-OUTPUT_FOLDERS = ['../data/detatilmask/2020-04-27/shu', ]
+# IMG_FOLDER = '../data/frame/2020-04-27/shu/5-3'
+# TRIMAP_FOLDER = '../data/trimap/2020-04-27/shu/5-3'
+# OUTPUT_FOLDER = '../data/detatilmask/2020-04-27/shu/5-3'
 
-if __name__ == '__main__':
-    checkpoint = '../preModel/BEST_checkpoint.tar'
+
+def detail_trimap(img_folder, trimap_folder, output_folder):
+    checkpoint = 'preModel/BEST_checkpoint.tar'
     checkpoint = torch.load(checkpoint)
     model = checkpoint['model'].module
     model = model.to(device)
@@ -23,14 +24,12 @@ if __name__ == '__main__':
 
     transformer = data_transforms['valid']
 
-    # ensure_folder('images')
-    # ensure_folder('images/alphamatting')
-    ensure_folder(OUTPUT_FOLDERS[0])
+    ensure_folder(output_folder)
 
-    files = [f for f in os.listdir(IMG_FOLDER) if f.endswith('.png') or f.endswith('.jpg')]
+    files = [f for f in os.listdir(img_folder) if f.endswith('.png') or f.endswith('.jpg')]
 
     for file in tqdm(files):
-        filename = os.path.join(IMG_FOLDER, file)
+        filename = os.path.join(img_folder, file)
         img = cv.imread(filename)
         print(img.shape)
         h, w = img.shape[:2]
@@ -41,30 +40,29 @@ if __name__ == '__main__':
         image = transformer(image)
         x[0:, 0:3, :, :] = image
 
-        for i in range(1):
-            file = os.path.splitext(file)[0] + ".png"
-            filename = os.path.join(TRIMAP_FOLDERS[i], file)
-            print('reading {}...'.format(filename))
-            trimap = cv.imread(filename, 0)
-            x[0:, 3, :, :] = torch.from_numpy(trimap.copy() / 255.)
-            # print(torch.max(x[0:, 3, :, :]))
-            # print(torch.min(x[0:, 3, :, :]))
-            # print(torch.median(x[0:, 3, :, :]))
+        file = os.path.splitext(file)[0] + ".png"
+        filename = os.path.join(trimap_folder, file)
+        print('reading {}...'.format(filename))
+        trimap = cv.imread(filename, 0)
+        x[0:, 3, :, :] = torch.from_numpy(trimap.copy() / 255.)
+        # print(torch.max(x[0:, 3, :, :]))
+        # print(torch.min(x[0:, 3, :, :]))
+        # print(torch.median(x[0:, 3, :, :]))
 
-            # Move to GPU, if available
-            x = x.type(torch.FloatTensor).to(device)
+        # Move to GPU, if available
+        x = x.type(torch.FloatTensor).to(device)
 
-            with torch.no_grad():
-                pred = model(x)
+        with torch.no_grad():
+            pred = model(x)
 
-            pred = pred.cpu().numpy()
-            pred = pred.reshape((h, w))
+        pred = pred.cpu().numpy()
+        pred = pred.reshape((h, w))
 
-            pred[trimap == 0] = 0.0
-            pred[trimap == 255] = 1.0
+        pred[trimap == 0] = 0.0
+        pred[trimap == 255] = 1.0
 
-            out = (pred.copy() * 255).astype(np.uint8)
+        out = (pred.copy() * 255).astype(np.uint8)
 
-            filename = os.path.join(OUTPUT_FOLDERS[i], file)
-            cv.imwrite(filename, out)
-            print('wrote {}.'.format(filename))
+        filename = os.path.join(output_folder, file)
+        cv.imwrite(filename, out)
+        print('wrote {}.'.format(filename))

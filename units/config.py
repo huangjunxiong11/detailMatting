@@ -39,3 +39,11 @@ a_path_test = 'data/mask_test/'
 bg_path_test = 'data/bg_test/'
 out_path_test = 'data/merged_test/'
 ##############################################################
+invideo = 'data/invideo/'
+frame = 'data/frame/'
+humanseg = 'data/humanseg/'
+rudemaskpath = 'data/rudemask/'
+trimap = 'data/trimap/'
+detailmask = 'data/detailmask/'
+result = 'data/result'
+
