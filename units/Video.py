@@ -74,5 +74,5 @@ def pictrue2video(path, avifile, sample):
     video_writer.release()
     logging.info("success produce video {}".format(avifile))
 
-fps, size = frames(video="../data/invideo/2020-04-27/shu/5-3.mp4", path="../data/frame/2020-04-27/shu")
+# fps, size = frames(video="../data/invideo/2020-04-27/shu/5-3.mp4", path="../data/frame/2020-04-27/shu")
 # pictrue2video(path="../data/frame/2020-04-27/shu/",avifile="../data/📛outavi/2020-04-27/shu/5.3.avi",sample="../data/invideo/2020-04-27/shu/5-3.mp4")
