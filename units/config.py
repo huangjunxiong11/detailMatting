@@ -45,5 +45,5 @@ humanseg = 'data/humanseg/'
 rudemaskpath = 'data/rudemask/'
 trimap = 'data/trimap/'
 detailmask = 'data/detailmask/'
-result = 'data/result'
+result = 'data/matting'
 

@@ -74,3 +74,22 @@ def rudemask2trimap(input_dir, output_dir):
 
 
 # rudemask2trimap('../data/rudemask/2020-04-27/shu/5-3', '../data/trimap/2020-04-27/shu/5-3')
+def get_matting(input, detail, output_dir):
+    input_dir = os.listdir(input)
+    input_dir.sort(key=lambda x: int(x[:-4]))
+
+    detailmask = os.listdir(detail)
+    detailmask.sort(key=lambda x: int(x[:-4]))
+
+    try:
+        os.makedirs(output_dir)
+    except OSError:
+        pass
+    for i in range(len(input_dir)):
+        a = os.path.join(input, input_dir[i])
+        b = os.path.join(detail, detailmask[i])
+        a = cv.imread(a)
+        b = cv.imread(b)
+        dst = cv.bitwise_and(a, b)
+        save_path = "{}/{:>04d}.png".format(output_dir, i)
+        cv.imwrite(save_path, dst)

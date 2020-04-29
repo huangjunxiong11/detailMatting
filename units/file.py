@@ -36,21 +36,7 @@ def get_dir(mp4):
     path = os.path.join(today, shu_heng, name5_3)
     return path
 
-
-
-get_dir("../data/invideo/2020-04-27/shu/5-3.mp4")
-
-
-
-
-
-
-
-
-
-
-
-
+# get_dir("../data/invideo/2020-04-27/shu/5-3.mp4")
 
 
 # csv = read_file('../data/invideo/')

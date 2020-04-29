@@ -5,7 +5,7 @@ import logging
 import os
 import time
 from Video import frames, pictrue2video
-from pictrue import matting, rudemask, rudemask2trimap
+from pictrue import matting, rudemask, rudemask2trimap, get_matting
 from eval import detail_trimap
 from file import get_dir
 from config import invideo, frame, humanseg, rudemaskpath, trimap, detailmask, result
@@ -29,19 +29,29 @@ def main():
         pass
     filename = logPath + '/' + time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + '.log'
     console_out(filename=filename)
-    run()
+    onerun()
 
 
-def run():
+def onerun():
     logging.info('runing')
-    videoname = "../data/invideo/2020-04-27/shu/5-3.mp4"
+    videoname = "data/invideo/2020-04-29/JX/tmp3.MP4"
     midir = get_dir(videoname)
-    fps, size = frames(video=videoname, path=os.path.join(frame, midir))
-    matting(os.path.join(frame, midir), os.path.join(humanseg, midir))
-    rudemask(os.path.join(humanseg, midir), os.path.join(rudemaskpath, midir))
-    rudemask2trimap(os.path.join(rudemaskpath, midir), os.path.join(trimap, midir))
-    detail_trimap(os.path.join(frame, midir), os.path.join(trimap, midir),
-                  os.path.join(detailmask, midir))
+
+    # fps, size = frames(video=videoname, path=os.path.join(frame, midir))
+
+    framePath = os.path.join(frame, midir)
+    humansegPath = os.path.join(humanseg, midir)
+    rudemaskPath = os.path.join(rudemaskpath, midir)
+    trimapPath = os.path.join(trimap, midir)
+    detailmaskPath = os.path.join(detailmask, midir)
+    resultPath = os.path.join(result, midir)
+
+    matting(framePath, humansegPath)
+    # rudemask(humansegPath, rudemaskPath)
+    # rudemask2trimap(rudemaskPath, trimapPath)
+    # detail_trimap(framePath, trimapPath, detailmaskPath)
+    # get_matting(framePath, detailmaskPath, resultPath)
+
     pass
 
 
